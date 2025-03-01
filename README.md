@@ -4,6 +4,9 @@ The Gitlab project can be accessed [here](https://gitlab.cs.pub.ro/andrei.ragman
 
 The **Cryptographic Bit Randomness Validator** is a Python-based web application designed to evaluate the unpredictability of bit sequences. This is crucial for ensuring cryptographic security by adhering to NIST standards for randomness testing. The application features a user-friendly web interface, powerful backend statistical tools, and Dockerized deployment.
 
+## Repository Migration
+This project was initially developed on GitLab and has been migrated to GitHub by [silviaberescu](https://github.com/silviaberescu). The history and contributions of all team members are preserved in this repository.
+
 ## Project Features
 
 - **User-Friendly Web Interface**: Simplifies the process of uploading bit sequences and reviewing detailed randomness analysis results.
