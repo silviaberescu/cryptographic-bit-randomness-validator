@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="result-container">
+	<h1>Test Result</h1>
+
+
+	<p><strong>Null hypothesis H<sub>0</sub>:</strong> the binary sequence is <i>(pseudo)random</i>,<br>
+		there are no left shift correlations.</p>
+	<p><strong>Alternative hypothesis H<sub>A</sub>:</strong> the binary sequence is <i>not (pseudo)random</i>.</p>
+
+	<h3>Hypothesis check:</h3>
+	<p><i>p - value > &alpha;</i></p>
+
+	<h2>Result:</h2>
+	<p><i>p - value = {{ result['pvalue'] }}</i></p>
+
+	<h3>Conclusion:</h3>
+	<p>For a significance level of &alpha; = {{ result['significance'] }}, the H<sub>0</sub> hypothesis is
+		<strong>{% if result['stat'] == 'PASS' %}accepted{% else %}rejected{% endif %}</strong>.
+	</p>
+
+	<a href="{{ url_for('download_results', 
+                         bit_sequence=result['bit_sequence'], 
+                         pvalue=result['pvalue'], 
+                         stat=result['stat'], 
+                         significance=result['significance']) }}" 
+						 class="btn-download">Download Results</a>
+
+</div>
+<style>
+	.result-container {
+		font-family: 'Times New Roman', serif;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		text-align: center;
+		margin: 20px auto;
+		padding: 20px;
+		max-width: 800px;
+	}
+
+	.result-container h1 {
+		text-align: center;
+		margin-top: 40px;
+		font-size: 32px;
+		padding: 20px 20px;
+		color: #407fb6;
+	}
+
+	.result-container h2 {
+		margin-top: 10px;
+		font-size: 28px;
+	}
+
+	.result-container h3 {
+		margin-top: 20px;
+		font-size: 24px;
+	}
+
+	.result-container p {
+		margin: 10px 0;
+		font-size: 18px;
+	}
+
+	p.result {
+		font-size: 24px;
+		font-weight: bold;
+	}
+</style>
+{% endblock %}

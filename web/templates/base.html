@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cryptographic Bit Randomness Validator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="{{ url_for('home') }}">Home</a></li>
+            {% if 'username' in session %}
+            <li class="nav-item"><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
+            <li class="nav-item"><a href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a href="{{ url_for('upload') }}">Upload</a></li>
+            <li class="nav-item dropdown-container">
+                <button id="dropdown-toggle" class="dropdown-toggle">Tests</button>
+                <ul id="dropdown-menu" class="dropdown">
+                    <li><a href="{{ url_for('monobit_test') }}">Monobit Test</a></li>
+                    <li><a href="{{ url_for('mbit_test') }}">M-bit Test</a></li>
+                    <li><a href="{{ url_for('runs_test') }}">Runs Test</a></li>
+                    <li><a href="{{ url_for('autocorrelation_test') }}">Autocorrelation Test</a></li>
+                    <li><a href="{{ url_for('serial_test') }}">Serial Test</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="{{ url_for('history') }}">History</a></li>
+        </ul>
+    </div>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+
+</body>
+
+</html>

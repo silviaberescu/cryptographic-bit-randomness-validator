@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Cryptographic Bit Randomness Validator{% endblock %}
+
+{% block content %}
+<!-- Home Header Section -->
+<div class="home-header">
+    <h1>Welcome to the Cryptographic Bit Randomness Validator</h1>
+    <p>This tool helps validate the randomness of cryptographic keys using various statistical tests. Randomness is a
+        crucial factor in cryptography, and this tool ensures that your keys are securely generated, helping to maintain
+        the strength of encryption systems.</p>
+    <a href="{{ url_for('upload') }}" class="get-started-btn">Get Started</a>
+</div>
+
+<!-- Features Section -->
+<div class="features">
+    <h2>Key Features</h2>
+    <div class="feature-item">
+        <h3>Monobit Test</h3>
+        <p>Assesses the randomness of a sequence by counting the number of ones and zeros in subsequences of M bits.</p>
+    </div>
+    <div class="feature-item">
+        <h3>M-bit Test</h3>
+        <p>Computes if the difference between the frequency of overlapping m-bit long patterns is statistically distinct
+            from one of a true random sequence.</p>
+    </div>
+    <div class="feature-item">
+        <h3>Runs Test</h3>
+        <p>Compares whether the difference between the transition from gaps (sequences of zeros) to blocks (sequences of
+            ones) in the given sequence is statistically relevant compared to the transition within a true random
+            sequence.</p>
+    </div>
+    <div class="feature-item">
+        <h3>Autocorrelation Test</h3>
+        <p>Evaluates if a sequence exhibits periodicity or any predictable patterns.</p>
+    </div>
+    <div class="feature-item">
+        <h3>Serial Test</h3>
+        <p>Examines the randomness by checking pairs of bits in the data sequence.</p>
+    </div>
+</div>
+
+{% endblock %}

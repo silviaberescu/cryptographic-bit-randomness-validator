@@ -1,0 +1,47 @@
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=mydatabase
+    depends_on:
+      - nist
+      - mysql
+    volumes:
+      - ./shared:/app/shared
+
+  nist:
+    build:
+      context: ./nist
+      dockerfile: Dockerfile.model
+    environment:
+      - MODEL_ENV=development
+    volumes:
+      - ./shared:/app/shared
+    command: [ "python", "handle_request.py" ]
+    ports:
+      - "5001:5001"
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  db_data:
+
+networks:
+  imagetolatex_network:
+    driver: bridge

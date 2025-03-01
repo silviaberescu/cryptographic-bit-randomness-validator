@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Monobit Test documentation{% endblock %}
+
+{% block content %}
+<div class="test-container">
+	<h1>Monobit Test</h1>
+	<p>
+		The Monobit test is a statistical test used to determine the randomness of a binary sequence. It checks the
+		proportion of ones in the sequence to ensure that it is approximately equal to the number of zeros.
+	</p>
+
+	<div class="test-image-container" style="text-align: center; margin: 40px 0;">
+		<img src="{{ url_for('static', filename='assets/monobit.png') }}" alt="Monobit Test" class="test-image">
+	</div>
+	<p>
+		If the test passes, it means the sequence has a balanced number of ones and zeros, suggesting randomness.
+		If the test fails, it indicates a bias in the sequence.
+	</p>
+
+</div>
+{% endblock %}

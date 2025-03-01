@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Runs Test documentation{% endblock %}
+
+{% block content %}
+<div class="test-container">
+	<h1>Runs Test</h1>
+	<p>
+		The Runs test is a statistical test used to determine the randomness of a binary sequence.
+	</p>
+
+	<div class="test-image-container" style="text-align: center; margin: 40px 0;">
+		<img src="{{ url_for('static', filename='assets/runs.png') }}" alt="Runs Test" class="test-image">
+	</div>
+
+</div>
+{% endblock %}

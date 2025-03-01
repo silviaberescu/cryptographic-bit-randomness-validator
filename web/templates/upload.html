@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Test Data{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+	<h1>Upload Test Data</h1>
+	<p>Select a test type, provide inputs, and upload your bit sequence to validate randomness.</p>
+
+	<!-- Test Selection Cards -->
+	<div class="test-cards">
+		<!-- de pus corect url ul -->
+		<div class="test-card" id="monobit" onclick="selectTest('monobit')">
+			<h3>
+				<a href="{{ url_for('monobit_test') }}" target="_blank" class="test-link">Monobit Test</a>
+			</h3>
+			<p>Checks the balance of 0s and 1s.</p>
+		</div>
+
+		<div class="test-card" id="mbit" onclick="selectTest('mbit')">
+			<h3>
+				<a href="{{ url_for('mbit_test') }}" target="_blank" class="test-link">M-bit Test</a>
+			</h3>
+			<p>Checks patterns in M-sized sequences.</p>
+		</div>
+
+		<div class="test-card" id="runs" onclick="selectTest('runs')">
+			<h3>
+				<a href="{{ url_for('runs_test') }}" target="_blank" class="test-link">Runs Test</a>
+			</h3>
+			<p>Checks consecutive runs of bits.</p>
+		</div>
+
+		<div class="test-card" id="autocorrelation" onclick="selectTest('autocorrelation')">
+			<h3>
+				<a href="{{ url_for('autocorrelation_test') }}" target="_blank" class="test-link">Autocorrelation
+					Test</a>
+			</h3>
+			<p>Detects periodic patterns in data.</p>
+		</div>
+
+		<div class="test-card" id="serial" onclick="selectTest('serial')">
+			<h3>
+				<a href="{{ url_for('serial_test') }}" target="_blank" class="test-link">Serial Test</a>
+			</h3>
+			<p>Analyzes overlapping patterns.</p>
+		</div>
+
+	</div>
+
+	<!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+	<!-- Form -->
+	<form id="upload-form" method="POST" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+		<div id="dynamic-fields"></div>
+
+		<!-- Significance Input -->
+		<label for="alpha">Significance α:</label>
+		<input type="text" id="alpha" name="alpha" required>
+
+		<!-- Bit Sequence Input -->
+        <label for="bit-sequence">Bit Sequence:</label>
+        <input type="text" id="bit-sequence" name="bit_sequence" 
+               value="{{ generated_bit_sequence if generated_bit_sequence else '' }}" required>
+			   
+		<!-- File Upload Section -->
+        <div class="file-upload-section">
+            <h2>Upload Bit Sequence File</h2>
+            <p>Drag and drop your file here or click to browse.</p>
+
+            <p id="file-info"></p>
+
+            <!-- Drag and Drop Area -->
+            <div id="drop-area" class="drop-area">
+                <p>Drop your file here...</p>
+                <input type="file" id="file-input" name="file" accept=".txt" hidden>
+                <button type="button" id="browse-files">Browse Files</button>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <button type="submit" name="generate_random" value="true" id="random-generator">Generate 1024 bits Sequence using random.org</button>
+        <button type="submit" id="submit-btn">Submit</button>
+	</form>
+
+	<p id="warning-message" class="warning">Note: Recommended bit sequence length is at least 1000 characters.</p>
+</div>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.getElementById('random-generator').addEventListener('click', async () => {
+			const apiKey = '0d2bfa57-e218-44e8-8af7-74af23327e6c';
+			const url = 'https://api.random.org/json-rpc/4/invoke';
+			const requests = [];
+			const bitSequence = [];
+	
+			for (let i = 0; i < 32; i++) {
+				const request = fetch(url, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						jsonrpc: '2.0',
+						method: 'generateIntegers',
+						params: { apiKey, n: 32, min: 0, max: 1, replacement: true },
+						id: i + 1,
+					}),
+				})
+					.then(response => response.json())
+					.then(data => {
+						if (data.result?.random?.data) {
+							bitSequence.push(...data.result.random.data);
+						} else {
+							throw new Error('Invalid response from Random.org');
+						}
+					})
+					.catch(error => {
+						console.error('Error generating random bits:', error);
+						alert('Failed to generate random bits. Please try again.');
+					});
+				requests.push(request);
+			}
+	
+			await Promise.all(requests);
+	
+			if (bitSequence.length === 1024) {
+				const bitString = bitSequence.join('');
+				document.getElementById('bit-sequence').value = bitString;
+			} else {
+				alert('Failed to generate a complete 1024-bit sequence.');
+			}
+		});
+
+		// File upload handling
+		const dropArea = document.getElementById('drop-area');
+		const fileInput = document.getElementById('file-input');
+		const browseButton = document.getElementById('browse-files');
+		const bitSequenceInput = document.getElementById('bit-sequence');
+		const fileInfo = document.getElementById('file-info');
+
+		browseButton.addEventListener('click', () => fileInput.click());
+
+		dropArea.addEventListener('dragover', (e) => {
+			e.preventDefault();
+			dropArea.classList.add('drag-over');
+		});
+
+		dropArea.addEventListener('dragleave', () => {
+			dropArea.classList.remove('drag-over');
+		});
+
+		dropArea.addEventListener('drop', (e) => {
+			e.preventDefault();
+			dropArea.classList.remove('drag-over');
+			const file = e.dataTransfer.files[0];
+			handleFile(file);
+		});
+
+		// When we selected a file
+		fileInput.addEventListener('change', (e) => {
+			const file = e.target.files[0];
+			handleFile(file);
+		});
+
+		// Read content of file
+		const handleFile = (file) => {
+        if (file && file.type === 'text/plain') {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const fileContent = e.target.result.trim();
+                const fileName = file.name;
+                const charCount = fileContent.length;
+                
+                // Display file info
+                fileInfo.textContent = `File: ${fileName} | Character Count: ${charCount}`;
+                
+                // Set the bit sequence input value
+                bitSequenceInput.value = fileContent;
+				};
+				reader.readAsText(file);
+			} else {
+				alert('Please upload a valid .txt file containing the bit sequence.');
+			}
+    	};
+	});
+	</script>
+{% endblock %}

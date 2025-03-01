@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}M-bit Test documentation{% endblock %}
+
+{% block content %}
+<div class="test-container">
+	<h1>Autocorrelation Test</h1>
+	<p>
+		The Autocorrelation test is a statistical test used to determine the randomness of a binary sequence.
+	</p>
+
+	<div class="test-image-container" style="text-align: center; margin: 40px 0;">
+		<img src="{{ url_for('static', filename='assets/autocorrelation.png') }}" alt="Autocorrelation Test"
+			class="autocorrelation-image">
+	</div>
+
+</div>
+{% endblock %}
