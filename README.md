@@ -129,9 +129,15 @@ and navigation routes in app.py.
 - Added logout option.
 
 ### Alexe Mihail
-TODO @alexe
+- Designed and implemented the backend functionality for the Login/Register system, including SQL database initialization within the docker-compose configuration.
+- Integrated the random.org API to enable the generation of random bit sequences.
+- Developed the upload and download functionalities, allowing users to upload text files containing bit sequences and download the results of statistical tests in JSON format.
+- Managed and implemented Flask routes, handling both GET and POST requests on the upload page, while ensuring a consistent user experience through cohesive frontend elements.
+- Supervised the overall progress of the project, ensuring timely execution and alignment with project goals.
 
 ## Problems we stumbled upon
 
 Silvia: Encountered issues while configuring routes and rendering templates in app.py, which were resolved through debugging, 
 team discussions and troubleshooting. Faced merge conflicts during collaborative development but successfully resolved them by coordinating with colleagues and reviewing code changes.
+
+Alexe: At one point, in my excitement to integrate the random.org API, I completely overlooked implementing proper CORS standards. The result? A shiny IP ban straight from the API! Basically, I earned a certificate in testing their patience...
